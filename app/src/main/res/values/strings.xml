@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DataEditJS</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_data_edit_js__main">DataEditJS_Main</string>
+</resources>

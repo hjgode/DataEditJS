@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <PreferenceCategory
+        android:title="DataEditJS Operation"
+
+        >
+
+        <CheckBoxPreference
+            android:key="use_js"
+            android:summary="Enable JS DataEditing"
+            android:title="Javascript DataEditing"
+            android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="convert_crlf"
+            android:summary="Convert CR and LF to \\\\r and \\\\n?"
+            android:title="Enable convert"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+</PreferenceScreen>
