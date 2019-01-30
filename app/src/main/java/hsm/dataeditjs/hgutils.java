@@ -12,9 +12,13 @@ import android.widget.Toast;
 
 import com.intentfilter.androidpermissions.PermissionManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -125,5 +129,34 @@ public class hgutils {
 
     public static String myCharset(){
         return "ISO-8859-1";
+    }
+
+    public static String readAssetFile(Context context, String sFile){
+        StringBuilder buf=new StringBuilder("");
+        try {
+            InputStream json = context.getAssets().open("book/contents.json");
+            BufferedReader in=
+                    new BufferedReader(new InputStreamReader(json, "UTF-8"));
+            String str;
+
+            while ((str=in.readLine()) != null) {
+                buf.append(str);
+            }
+            in.close();
+        }catch (IOException ex){
+            Log.e(TAG, "readAssetsFile: "+ sFile + ": "+ex.getMessage());
+        }
+        return buf.toString();
+    }
+
+    public static BufferedReader readAssetReader(Context context, String sFile){
+        BufferedReader in=null;
+        try {
+            InputStream json = context.getAssets().open("book/contents.json");
+            in = new BufferedReader(new InputStreamReader(json, "UTF-8"));
+        }catch (IOException ex){
+            Log.e(TAG, "readAssetsFile: "+ sFile + ": "+ex.getMessage());
+        }
+        return in;
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="code_id_array">
+        <item>AZTEC z</item>
+        <item>CODABAR a</item>
+        <item>CODE11 h</item>
+        <item>CODE128 j</item>
+        <item>EAN128 I</item>
+        <item>CODE39 b</item>
+        <item>CODE49 l</item>
+        <item>CODE93 i</item>
+        <item>COMPOSITE y</item>
+        <item>DATAMATRIX w</item>
+        <item>EAN8 D</item>
+        <item>EAN13 d</item>
+        <item>INT25 e</item>
+        <item>MAXICODE x</item>
+        <item>MICROPDF R</item>
+        <item>PDF417 r</item>
+        <item>POSTNET P</item>
+        <item>OCR O</item>
+        <item>QR s</item>
+        <item>RSS y</item>
+        <item>UPCA c</item>
+        <item>UPCE E</item>
+        <item>ISBT j</item>
+        <item>BPO B</item>
+        <item>CANPOST C</item>
+        <item>AUSPOST A</item>
+        <item>IATA25 f</item>
+        <item>CODABLOCK q</item>
+        <item>JAPOST J</item>
+        <item>PLANET L</item>
+        <item>DUTCHPOST K</item>
+        <item>MSI g</item>
+        <item>TLC39 T</item>
+        <item>TRIOPTIC =</item>
+        <item>CODE32 %lt;</item>
+        <item>STRT25 f</item>
+        <item>MATRIX25 m</item>
+        <item>PLESSEY n</item>
+        <item>CHINAPOST Q</item>
+        <item>KOREAPOST ?</item>
+        <item>TELEPEN t</item>
+        <item>CODE16K o</item>
+        <item>POSICODE W</item>
+        <item>COUPONCODE c</item>
+        <item>USPS4CB M</item>
+        <item>IDTAG N</item>
+        <item>LABELIV &gt;</item>
+        <item>LABELV ,</item>
+        <item>GS1_128 I</item>
+        <item>HANXIN H</item>
+        <item>GRIDMATRIX x</item>
+    </string-array>
+
+</resources>

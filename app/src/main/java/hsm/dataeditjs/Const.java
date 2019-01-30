@@ -22,4 +22,8 @@ public class Const {
     public static final String KEY_REQUEST_CODE = "requestCode";
 
     public static final String JS_FILE_NAME = "dataedit.js";
+
+    public  static final String EXTRA_DOLOG = "EXTRA_DOLOG";
+
+    public static final String EXTRA_MY_INTENT = "hdm.dataeditjs.log";
 }
