@@ -137,4 +137,4 @@ An alternative to the above:
 
 In the internet are various online javascript interpreters. For example https://www.jdoodle.com/execute-rhino-online
 
-[img jdoodle.png]
+![jdoodle](https://github.com/hjgode/DataEditJS/raw/master/doc/jdoodle.png)
