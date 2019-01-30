@@ -1,0 +1,17 @@
+<?xml version="1.0" standalone="yes"?>
+<ConfigDoc name="DataCollectionService">
+    <Section name="wedge">
+        <Section name="profiles">
+            <Section name="dcs.scanner.imager">
+                <Section name="DEFAULT">
+                    <Key name="DPR_EDIT_DATA_PLUGIN" path="/wedge/profiles/dcs.scanner.imager/DEFAULT/DATA_PROCESSING_SETTINGS/EDIT_DATA_PLUGIN">hsm.dataeditjs/.DataEditJS</Key>
+                </Section>
+            </Section>
+        </Section>
+    </Section>
+    <HHPReserved name="HHPReserved">
+        <Section>
+            <Key name="EXMVersion">1</Key>
+        </Section>
+    </HHPReserved>
+</ConfigDoc>
