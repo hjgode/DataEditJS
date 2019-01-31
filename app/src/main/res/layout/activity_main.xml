@@ -32,6 +32,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="36dp"
         android:layout_marginEnd="8dp"
+        android:autoText="false"
         android:ems="10"
         android:inputType="text"
         android:textSize="24sp"

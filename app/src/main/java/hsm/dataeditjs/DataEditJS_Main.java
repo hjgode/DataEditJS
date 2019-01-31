@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -74,6 +73,9 @@ public class DataEditJS_Main extends AppCompatActivity {
         });
         checkPermissions();
         receiver=new MyReceiver();
+
+        //restore log text and others
+        restoreState(savedInstanceState);
     }
 
     @Override
@@ -91,6 +93,33 @@ public class DataEditJS_Main extends AppCompatActivity {
         super.onDestroy();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putString("logtext", txtLog.getText().toString());
+        state.putString("testvalue", txtInput.getText().toString());
+        state.putInt("selectedcodeid", spinnerCodeIDs.getSelectedItemPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        restoreState(savedInstanceState);
+    }
+
+    void restoreState(Bundle savedInstanceState){
+        //restore log text and others
+        if (    (savedInstanceState != null) &&
+                (savedInstanceState.getString("logtext") != null) &&
+                (savedInstanceState.getString("testvalue") != null) &&
+                (savedInstanceState.getString("selectedcodeid") != null)
+        ) {
+            txtLog.setText(savedInstanceState.getString("logtext"));
+            txtInput.setText(savedInstanceState.getString("testvalue"));
+            spinnerCodeIDs.setSelection(savedInstanceState.getInt("selectedcodeid"));
+        }
+
+    }
     void checkPermissions(){
         PermissionManager permissionManager = PermissionManager.getInstance(context);
         permissionManager.checkPermissions(singleton(Manifest.permission.READ_EXTERNAL_STORAGE), new PermissionManager.PermissionRequestListener() {
@@ -153,12 +182,7 @@ public class DataEditJS_Main extends AppCompatActivity {
         });
     }
 
-    private BroadcastReceiver logReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            updateUI(intent);
-        }
-    };
+
     private void updateUI(Intent intent) {
         String text = intent.getStringExtra(Const.EXTRA_DOLOG);
         txtLog.setText(txtLog.getText().toString() + "\n" + text);

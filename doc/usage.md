@@ -35,7 +35,7 @@ Either select or enter the plugin package and class name: "hsm.dataeditjs/.DataE
 
 Scan the following barcode to activate the plugin:
 
-[img activate_barcode.png]
+![barcode](https://github.com/hjgode/DataEditJS/raw/master/doc/activate_barcode.png)
 
 ## Activate by xml file
 
@@ -91,6 +91,7 @@ Reference: https://www.w3schools.com/js/default.asp and others
 *Variables can contain any type of variables: string, number, array etc.
 *expression lines have to end with a semicolon
 *strings can be surrounded by double or single quotes
+*indices start with 0, so string.charAt(1) returns the second char.
 
 ### the if Condition
 Using the if condition the following code is executed or not depending on the condition value.
@@ -133,8 +134,116 @@ An alternative to the above:
         return outStr;
     }
 
+##Split data at FNC1
+
+    //var str="1234\x1d567\x1d890";
+    function dataEdit(inStr, sCodeID) {
+        var str=inStr;
+        var outStr="";
+        for (var i = 0; i < str.length; i++) {
+            if(str.charAt(i)=='\x1d'){
+                outStr=outStr+'\t';
+            }
+            else{
+                outStr=outStr+str.charAt(i);
+            }
+        }
+        return outStr;
+    }
+    // gives 1234\t567\t890
+
+Using string.split()
+
+    //var str="1234\x1d567\x1d890";
+    function dataEdit(inStr, sCodeID) {
+        var str=inStr;
+        var outStr="";
+        var parts=inStr.split('\x1d');
+        for(i=0; i<parts.length; i++){
+            outStr=outStr+parts[i]+"\t";
+        }
+        //or use join
+        //outStr=parts.join('\t');
+        
+        return outStr;
+    }
+
+##Find a pattern
+
+    //var str="1234567890";
+    function dataEdit(inStr, sCodeID) {
+        var str=inStr;
+        var outStr="";
+        var pos = inStr.indexOf('456');
+        if(pos == -1){
+            outStr="not found";
+        }else{
+            //cut this pattern
+            outStr=inStr.substr(0,pos) + inStr.substr(pos+3);
+        }
+        return outStr;
+    }
+    //1237890
+
+##using custom functions
+
+    function stripFromEnd(inp,num){
+        out=inp.substr(0,inp.length-num);
+        return out;
+    }
+    
+    function dataEdit(inStr,inCodeID){
+        var outStr="";
+        outStr=stripFromEnd(inStr,2);
+        var pos = outStr.indexOf('456');
+        inStr=outStr;
+        if(pos == -1){
+            outStr="not found";
+        }else{
+            //cut this pattern
+            outStr=inStr.substr(0,pos) + inStr.substr(pos+3);
+        }
+        return outStr;
+    }
+
 # Testing your code
 
 In the internet are various online javascript interpreters. For example https://www.jdoodle.com/execute-rhino-online
 
 ![jdoodle](https://github.com/hjgode/DataEditJS/raw/master/doc/jdoodle.png)
+
+or (better): https://www.onlinegdb.com/online_javascript_rhino_interpreter
+
+![onlinedgb](https://github.com/hjgode/DataEditJS/raw/master/doc/js-onlinegdb_com.png)
+
+##Testing in onlinedgb
+
+Open the web site at https://www.onlinegdb.com/online_javascript_rhino_interpreter and enter this script:
+
+    function stripFromEnd(inp,num){
+        out=inp.substr(0,inp.length-num);
+        return out;
+    }
+    
+    function dataEdit(inStr,inCodeID){
+        var outStr="";
+        outStr=stripFromEnd(inStr,2);
+        var pos = outStr.indexOf('456');
+        inStr=outStr;
+        if(pos == -1){
+            outStr="not found";
+        }else{
+            //cut this pattern
+            outStr=inStr.substr(0,pos) + inStr.substr(pos+3);
+        }
+        return outStr;
+    }
+    print(dataEdit("1234567890","b"));
+    
+Then click on the green run symbol at top of the script window to run the script in Interactive Console mode. You will get a new black Input window at the bottom showing the ouput of the print command.
+
+For the above example you will get "12378" as we called dataEdit with barcode data=1234567890 and code ID=b.
+
+![onlinedgb](https://github.com/hjgode/DataEditJS/raw/master/doc/js-onlinegdb_com_example.png)
+
+You can test now different code and input and verify you get the needed result.

@@ -34,12 +34,13 @@ public class hgutils {
         permissionManager.checkPermissions(singleton(Manifest.permission.READ_EXTERNAL_STORAGE), new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
-                Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Read external storage granted");
             }
 
             @Override
             public void onPermissionDenied() {
-                Toast.makeText(context, "Permissions Denied", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "DataEditJS: External Storage Permissions Denied!", Toast.LENGTH_SHORT).show();
             }
         });
     }

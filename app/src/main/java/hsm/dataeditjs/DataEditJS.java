@@ -39,6 +39,11 @@ public class DataEditJS extends BroadcastReceiver {
         */
 
         String codeId=intent.getStringExtra("codeId");
+
+        String codeType = codeIDs.getNameCodeID(codeId);
+        Log.i(TAG, "codeType="+codeType);
+        Log.i(TAG, Const.getSymbologyNamebyID(codeId));
+
         String aimID=intent.getStringExtra("aimId");
         String timeStamp=intent.getStringExtra("timestamp");
         String charSet=intent.getStringExtra("charset");
