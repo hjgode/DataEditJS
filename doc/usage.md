@@ -134,7 +134,7 @@ An alternative to the above:
         return outStr;
     }
 
-##Split data at FNC1
+## Split data at FNC1
 
     //var str="1234\x1d567\x1d890";
     function dataEdit(inStr, sCodeID) {
@@ -168,7 +168,7 @@ Using string.split()
         return outStr;
     }
 
-##Find a pattern
+## Find a pattern
 
     //var str="1234567890";
     function dataEdit(inStr, sCodeID) {
@@ -185,7 +185,7 @@ Using string.split()
     }
     //1237890
 
-##using custom functions
+## using custom functions
 
     function stripFromEnd(inp,num){
         out=inp.substr(0,inp.length-num);
