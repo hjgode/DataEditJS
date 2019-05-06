@@ -1,6 +1,8 @@
 package hsm.dataeditjs;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 
 import android.content.BroadcastReceiver;
+import android.widget.Toast;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
@@ -121,7 +124,21 @@ public class EditingEngine {
             Log.e(TAG, "function.call failed: " + e.getMessage());
             sendLog("function.call failed: " + e.getMessage());
 
-        } finally {
+        } catch(Exception ex) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
+            alertDialogBuilder.setMessage("Possible JS error. " + ex.getMessage());
+            alertDialogBuilder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+//                                    Toast.makeText(_context,"You clicked yes button",Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }finally
+        {
             Context.exit();
         }
         Log.i(TAG, "eveluate return with: " + hgutils.getHexedString(answer));
