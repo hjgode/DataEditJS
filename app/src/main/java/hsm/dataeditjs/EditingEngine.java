@@ -18,6 +18,11 @@ import org.mozilla.javascript.Scriptable;
 import android.content.BroadcastReceiver;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import static android.support.v4.content.ContextCompat.startActivity;
 
 
@@ -45,6 +50,7 @@ public class EditingEngine {
 
     boolean bUseJS = true;
     boolean bReplaceCrLf = true;
+    boolean bUseAIBarcodeParser = false;
 
     String answer;
 
@@ -57,8 +63,13 @@ public class EditingEngine {
         bReplaceCrLf = true;
         if (!SP.getBoolean("convert_crlf", false))
             bReplaceCrLf = false;
+
+        bUseAIBarcodeParser =true;
+        // The method getBoolean return default value if the key doesn't exist
+        if (SP.getBoolean("use_ai", false))
+            bUseAIBarcodeParser = true;
         Log.i(TAG, "sharedPrefs: " + SP.getAll().toString());
-        Log.d(TAG, "bUseJS, bReplaceCrLf " + bUseJS + ", " + bReplaceCrLf);
+        Log.d(TAG, "bUseJS, bReplaceCrLf, bUseAIBarcodeParser " + bUseJS + ", " + bReplaceCrLf + ", " + bUseAIBarcodeParser);
     }
 
     /**
@@ -100,8 +111,19 @@ public class EditingEngine {
         rhino.setOptimizationLevel(-1);
 
         try {
-
             Scriptable scope = rhino.initStandardObjects();
+
+            //use an additional library, like <script src="./src/BarcodeParser.js"></script>
+            if(bUseAIBarcodeParser && codeIDs.getNameCodeID(sCodeID)=="GS1_128") {
+                Log.i(TAG, "reading external script...");
+                Reader reader1 = null;
+                reader1 = new InputStreamReader(_context.getAssets().open("BarcodeParser.js"));
+//                    new File(this.getClass().getClassLoader().getResource("BarcodeParser.js").toURI()));// "/sdcard/Documents/BarcodeParser.js");
+
+                //load library
+                Log.i(TAG, "loading external script...");
+                rhino.evaluateReader(scope, reader1, "reader1", 1 , null);
+            }
 
             /**
              * evaluateString(Scriptable scope, java.lang.String source, java.lang.String sourceName,
@@ -125,18 +147,24 @@ public class EditingEngine {
             sendLog("function.call failed: " + e.getMessage());
 
         } catch(Exception ex) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
-            alertDialogBuilder.setMessage("Possible JS error. " + ex.getMessage());
-            alertDialogBuilder.setPositiveButton("OK",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
+            Toast.makeText(_context, ex.getMessage(),Toast.LENGTH_LONG);
+/*
+            if(_context!=null) {
+                Log.e(TAG, ex.getMessage());
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(_context);
+                alertDialogBuilder.setMessage("Possible JS error. " + ex.getMessage());
+                alertDialogBuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface arg0, int arg1) {
 //                                    Toast.makeText(_context,"You clicked yes button",Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            }
+                        });
 
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+*/
         }finally
         {
             Context.exit();

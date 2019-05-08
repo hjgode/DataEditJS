@@ -19,6 +19,7 @@
         android:editable="false"
         android:fontFamily="monospace"
         android:minLines="8"
+        android:maxLines="8"
         android:text="..."
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"

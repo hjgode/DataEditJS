@@ -18,5 +18,10 @@
             android:summary="Convert CR and LF to \\\\r and \\\\n?"
             android:title="Enable convert"
             android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="use_ai"
+            android:summary="Use the GS1 AI parser library?"
+            android:title="Enable AI Parser"
+            android:defaultValue="false"/>
     </PreferenceCategory>
 </PreferenceScreen>

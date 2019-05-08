@@ -109,6 +109,8 @@ public class hgutils {
     }
 
     public static String getHexedString(String input) {
+        if(input==null)
+            return "";
         StringBuilder buffer = new StringBuilder(input.length());
         for (int i = 0; i < input.length(); i++) {
             if ((int) input.charAt(i) > 256) {
