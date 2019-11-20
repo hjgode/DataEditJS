@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -31,6 +32,7 @@ public class DataEditJS_Main extends AppCompatActivity {
     Context context=this;
     boolean bPermissionsOK=false;
     final String TAG ="DataEditJS_Main";
+    private SharedPreferences mPrefs;
 
     MyReceiver receiver=null;
 
@@ -71,52 +73,90 @@ public class DataEditJS_Main extends AppCompatActivity {
                 checkPermissions(); //refresh
             }
         });
+
         checkPermissions();
+
         receiver=new MyReceiver();
 
+        txtJSsrc.setText(hgutils.getScriptFile(this));
         //restore log text and others
-        restoreState(savedInstanceState);
+        //restoreState(savedInstanceState);
+        mPrefs = this.getPreferences(MODE_PRIVATE);
+
     }
 
+    void MySaveInstance(){
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString("logtext", txtLog.getText().toString());
+        editor.putString("testvalue", txtInput.getText().toString());
+        editor.putInt("selectedcodeid", spinnerCodeIDs.getSelectedItemPosition());
+        editor.putString("scripttext", txtJSsrc.getText().toString());
+        editor.commit();
+    }
+    void MyRestoreInstance(){
+        String s="";
+        txtLog.setText(mPrefs.getString("logtext", s));
+        txtInput.setText(mPrefs.getString("testvalue",s));
+        spinnerCodeIDs.setSelection(mPrefs.getInt("selectedcodeid",0));
+        txtJSsrc.setText(mPrefs.getString("scripttext",s));
+
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        MySaveInstance();
+    }
     @Override
     protected void onResume(){
         Log.d(TAG, "onResume: registerReceiver...");
         super.onResume();
         //for receiving background messages
         registerReceiver(receiver, new IntentFilter(Const.EXTRA_MY_INTENT));
+        MyRestoreInstance();
     }
 
     @Override
     protected void onDestroy() {
         // Unregister since the activity is about to be closed.
         unregisterReceiver(receiver);
+        MySaveInstance();
         super.onDestroy();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle state) {
+        Log.d(TAG, "onSaveInstanceState...");
         super.onSaveInstanceState(state);
         state.putString("logtext", txtLog.getText().toString());
         state.putString("testvalue", txtInput.getText().toString());
         state.putInt("selectedcodeid", spinnerCodeIDs.getSelectedItemPosition());
+        state.putString("scripttext", txtJSsrc.getText().toString());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.d(TAG, "onRestoreInstanceState...");
         super.onRestoreInstanceState(savedInstanceState);
         restoreState(savedInstanceState);
     }
 
     void restoreState(Bundle savedInstanceState){
+        Log.d(TAG, "restoreState...");
         //restore log text and others
-        if (    (savedInstanceState != null) &&
-                (savedInstanceState.getString("logtext") != null) &&
-                (savedInstanceState.getString("testvalue") != null) &&
-                (savedInstanceState.getString("selectedcodeid") != null)
-        ) {
-            txtLog.setText(savedInstanceState.getString("logtext"));
-            txtInput.setText(savedInstanceState.getString("testvalue"));
-            spinnerCodeIDs.setSelection(savedInstanceState.getInt("selectedcodeid"));
+        if ( savedInstanceState != null ) {
+            if(savedInstanceState.getString("logtext") != null)
+                txtLog.setText(savedInstanceState.getString("logtext"));
+            if(savedInstanceState.getString("testvalue") != null)
+                txtInput.setText(savedInstanceState.getString("testvalue"));
+            if(savedInstanceState.getString("selectedcodeid") != null)
+                spinnerCodeIDs.setSelection(savedInstanceState.getInt("selectedcodeid"));
+            if(savedInstanceState.getString("scripttext") != null && savedInstanceState.getString("scripttext").length()>0)
+                txtJSsrc.setText(savedInstanceState.getString("scripttext"));
+            else
+                txtJSsrc.setText("function dataEdit(inStr, sAimID) { \n" +
+                        "  var v2 = inStr.replace(/\\x1D/g,\"@\");\n" +
+                        "  return v2;\n" +
+                        "}");
         }
 
     }

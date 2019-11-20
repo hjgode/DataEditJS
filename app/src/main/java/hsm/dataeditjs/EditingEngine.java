@@ -58,7 +58,7 @@ public class EditingEngine {
         _context = context;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
         bUseJS = true;
-        if (!SP.getBoolean("use_js", false))
+        if (!SP.getBoolean("use_js", true))
             bUseJS = false;
         bReplaceCrLf = true;
         if (!SP.getBoolean("convert_crlf", false))

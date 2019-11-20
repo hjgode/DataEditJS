@@ -16,6 +16,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,11 +33,12 @@ public class hgutils {
 
     static void checkPermissions(final Context context){
         PermissionManager permissionManager = PermissionManager.getInstance(context);
-        permissionManager.checkPermissions(singleton(Manifest.permission.READ_EXTERNAL_STORAGE), new PermissionManager.PermissionRequestListener() {
+        permissionManager.checkPermissions(singleton(Manifest.permission.WRITE_EXTERNAL_STORAGE), new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
                 //Toast.makeText(context, "Permissions Granted", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Read external storage granted");
+                bPermissionsOK=true;
             }
 
             @Override
@@ -47,8 +50,10 @@ public class hgutils {
 
     public static String getScriptFile(Context context){
         checkPermissions(context);
-        if(!bPermissionsOK)
+        if(!bPermissionsOK) {
             Toast.makeText(context, "Permissions denied. Cannot read external storage", Toast.LENGTH_LONG);
+            Log.d(TAG,"Permissions denied. Cannot read external storage");
+        }
         File _directory;
         File _file;// = new File(contextWrapper.getExternalFilesDir(null), "state.txt");
         String _filename=Const.JS_FILE_NAME;
@@ -58,10 +63,29 @@ public class hgutils {
             if (isExternalStorageWritable()) {
                 Log.d(TAG, "external storage writeable");
                 _directory = getDocumentsStorageDir();
-
+                if(_directory.mkdir())
+                    Log.d(TAG, "Created directory: "+_directory.getName());
                 Log.d(TAG, "using directory '" + _directory.toString() + "', file='" + _filename.toString() + "'");
-                _file = new File(_directory, _filename);
-                if (_file.exists()) {
+                _file = new File(_directory, _filename); //concats dir and file name
+                if (!_file.exists()) {
+                    try {
+                        if(!_file.createNewFile()) {
+                            Log.d(TAG, "File already exists: ");
+                        }
+                    } catch (IOException ex) {
+                        Log.d(TAG, "createNewFile() exception: "+ex.getMessage());
+                    }
+                    FileWriter fileWriter=new FileWriter(_file, false);
+                    String test="function dataEdit(inStr, sAimID) { \n" +
+                            "  var v2 = inStr.replace(/\\x1D/g,\"@\");\n" +
+                            "  return v2;\n" +
+                            "}";
+                    fileWriter.write(test);
+                    fileWriter.flush();
+                    fileWriter.close();
+                    lines=test;
+                }
+                else if (_file.exists()) {
                     //binary read
                     FileInputStream fileInputStream = new FileInputStream(_file);
                     FileChannel fileChannel = fileInputStream.getChannel();
@@ -73,9 +97,9 @@ public class hgutils {
                 }
             }
         }catch(FileNotFoundException ex){
-
+            Log.d(TAG, "getScriptFile FileNotFoundException: "+ex.getMessage());
         }catch(java.io.IOException ex){
-
+            Log.d(TAG, "getScriptFile IOException: "+ex.getMessage());
         }
         return lines;
     }
